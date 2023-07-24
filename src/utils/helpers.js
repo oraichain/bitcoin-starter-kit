@@ -130,10 +130,10 @@ const parsePaymentRequest = (data = "") => {
           let message = "";
           try {
             amount = result.options.amount || "";
-          } catch (e) {}
+          } catch (e) { }
           try {
             message = result.options.message || "";
-          } catch (e) {}
+          } catch (e) { }
           return {
             error: false,
             data: {
@@ -181,10 +181,10 @@ const getDifferenceBetweenDates = ({
 //Retrived from : https://github.com/bitcoinjs/bitcoinjs-lib/issues/1238
 /*
 const convert_zpub_to_xpub = (z) => {
-	let data = b58.decode(z);
-	data = data.slice(4);
-	data = Buffer.concat([Buffer.from("0488b21e","hex"), data]);
-	return b58.encode(data);
+  let data = b58.decode(z);
+  data = data.slice(4);
+  data = Buffer.concat([Buffer.from("0488b21e","hex"), data]);
+  return b58.encode(data);
 };
 */
 
@@ -207,7 +207,7 @@ const getTransactionData = async ({
       if (jsonResponse.error) {
         return failure("No transaction data found.");
       }
-    } catch (e) {}
+    } catch (e) { }
     return { error: false, data: jsonResponse };
   } catch (e) {
     console.log(e);
@@ -465,14 +465,14 @@ const createTransaction = async ({
     //Shuffle and add outputs.
     try {
       targets = shuffleArray(targets);
-    } catch (e) {}
+    } catch (e) { }
 
     targets.forEach((target) => {
       //Check if OP_RETURN
       let isOpReturn = false;
       try {
         isOpReturn = !!target.script;
-      } catch (e) {}
+      } catch (e) { }
       if (isOpReturn) {
         psbt.addOutput({
           script: target.script,
@@ -584,21 +584,19 @@ const generateAddresses = async ({
     await Promise.all(
       addressArray.map(async (item, i) => {
         try {
-          const addressPath = `m/${keyDerivationPath}'/${coinTypePath}'/0'/0/${
-            i + addressIndex
-          }`;
+          const addressPath = `m/${keyDerivationPath}'/${coinTypePath}'/0'/0/${i + addressIndex
+            }`;
           const addressKeypair = root.derivePath(addressPath);
           const address = getAddress(addressKeypair, network, addressType);
           const scriptHash = getScriptHash(address, network);
           addresses.push({ address, path: addressPath, scriptHash });
           return { address, path: addressPath, scriptHash };
-        } catch (e) {}
+        } catch (e) { }
       }),
       changeAddressArray.map(async (item, i) => {
         try {
-          const changeAddressPath = `m/${keyDerivationPath}'/${coinTypePath}'/0'/1/${
-            i + changeAddressIndex
-          }`;
+          const changeAddressPath = `m/${keyDerivationPath}'/${coinTypePath}'/0'/1/${i + changeAddressIndex
+            }`;
           const changeAddressKeypair = root.derivePath(changeAddressPath);
           const address = getAddress(
             changeAddressKeypair,
@@ -612,7 +610,7 @@ const generateAddresses = async ({
             scriptHash,
           });
           return { address, path: changeAddressPath, scriptHash };
-        } catch (e) {}
+        } catch (e) { }
       }),
     );
     return { error: false, data: { addresses, changeAddresses } };
@@ -834,7 +832,7 @@ const decodeOpReturnMessage = (opReturn = "") => {
           message = message.toString();
           messages.push(message);
         }
-      } catch (e) {}
+      } catch (e) { }
     });
     return messages;
   } catch (e) {
@@ -913,7 +911,7 @@ const verifyMessage = ({
         signature,
         messagePrefix,
       );
-    } catch (e) {}
+    } catch (e) { }
     //This is a fix for https://github.com/bitcoinjs/bitcoinjs-message/issues/20
     if (!isValid)
       isValid = bitcoinMessage.verifyElectrum(
@@ -1050,11 +1048,11 @@ const getLastWordInString = (phrase = "") => {
 };
 
 /*
-	Source:
-	https://gist.github.com/junderw/b43af3253ea5865ed52cb51c200ac19c
-	Usage:
-	getByteCount({'MULTISIG-P2SH:2-4':45},{'P2PKH':1}) Means "45 inputs of P2SH Multisig and 1 output of P2PKH"
-	getByteCount({'P2PKH':1,'MULTISIG-P2SH:2-3':2},{'P2PKH':2}) means "1 P2PKH input and 2 Multisig P2SH (2 of 3) inputs along with 2 P2PKH outputs"
+  Source:
+  https://gist.github.com/junderw/b43af3253ea5865ed52cb51c200ac19c
+  Usage:
+  getByteCount({'MULTISIG-P2SH:2-4':45},{'P2PKH':1}) Means "45 inputs of P2SH Multisig and 1 output of P2PKH"
+  getByteCount({'P2PKH':1,'MULTISIG-P2SH:2-3':2},{'P2PKH':2}) means "1 P2PKH input and 2 Multisig P2SH (2 of 3) inputs along with 2 P2PKH outputs"
 */
 const getByteCount = (inputs, outputs, message = "") => {
   try {
@@ -1097,10 +1095,10 @@ const getByteCount = (inputs, outputs, message = "") => {
       return number < 0xfd
         ? 1
         : number <= 0xffff
-        ? 3
-        : number <= 0xffffffff
-        ? 5
-        : 9;
+          ? 3
+          : number <= 0xffffffff
+            ? 5
+            : 9;
     };
 
     Object.keys(inputs).forEach(function (key) {
@@ -1142,7 +1140,7 @@ const getByteCount = (inputs, outputs, message = "") => {
       messageByteCount = message.length;
       //Multiply by 2 to help ensure Electrum servers will broadcast the tx.
       messageByteCount = messageByteCount * 2;
-    } catch {}
+    } catch { }
     return Math.ceil(totalWeight / 4) + messageByteCount;
   } catch (e) {
     return 256;

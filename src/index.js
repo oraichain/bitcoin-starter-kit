@@ -1,4 +1,5 @@
 const helpers = require("./utils/helpers");
+require('dotenv').config();
 
 const selectedCrypto = "bitcoinTestnet";
 const baseUrl =
@@ -13,6 +14,7 @@ const run = async (message) => {
     mnemonic,
     selectedCrypto,
   });
+  console.log("private key length: ", keyPair.privateKey.length)
 
   const address = helpers.getAddress(keyPair, selectedCrypto, "bech32");
 
@@ -29,7 +31,7 @@ const run = async (message) => {
 
   //   const relayFee = await helpers.wallet.relayFee.default({ selectedCrypto });
   //   console.log("relayeFee", relayFee);
-  console.log(res);
+  console.dir(res, { depth: null });
 
   if (!res.data.balance) {
     console.log("Balance is 0");
@@ -41,6 +43,7 @@ const run = async (message) => {
     return;
   }
 
+  // create a transaction with a random message. This tx wont send any coins
   const { data: txHex } = await helpers.createTransaction({
     confirmedBalance: res.data.balance,
     changeAddress: address,
